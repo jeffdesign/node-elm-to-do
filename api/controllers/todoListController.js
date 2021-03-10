@@ -2,11 +2,11 @@ const mongoose = require("moongose"),
   Task = mongoose.model("Tasks");
 
 // Methods:
-// list_all_tasks
-// create_a_task
-// read_a_task
-// update_a_task
-// delete_a_task
+// get_tasks = return all tasks
+// get_task = return specific task
+// create_task = create and return new task
+// update_task = update specific task and return it
+// delete_task = delete specific task and return all tasks
 
 //  Resolve listing all tasks
 exports.get_tasks = (_, response) => {
