@@ -1,7 +1,25 @@
 const express = require("express"),
-  app = express()
-  port = process.env.PORT || 3337
+  app = express();
+(port = process.env.PORT || 3337),
+  (mongoose = require("mongoose")),
+  (Task = require("./api/models/todoListModel"));
+bodyParser = require("body-parser");
 
-  app.listen(port)
+const routes = require("./api/routes/todoListRoutes");
 
-  console.log(`API Server started on: ${port}`);
+//  mongoose instance connection url connection
+mongoose.Promise = global.Promise;
+mongoose.connect("mongodb://localhost/Tododb");
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+routes(app);
+
+//  Handle invalid routes
+app.get("*", (req, res) => {
+  res.status(404).send({ url: req.originalUrl + " not found" });
+});
+
+app.listen(port);
+
+console.log(`API Server started on: ${port}`);
