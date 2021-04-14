@@ -4,14 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "npm run server & npm run dev",
+    "server": "nodemon server.js",
+    "dev": "node './node_modules/elm-live/bin/elm-live.js' client/Main.elm --port=3338 --open"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "elm": "^0.19.1-5",
     "express": "^4.17.1",
     "mongoose": "^5.11.19",
     "nodemon": "^2.0.7"
+  },
+  "devDependencies": {
+    "elm": "^0.19.1-5",
+    "elm-live": "^4.0.2"
   }
 }
