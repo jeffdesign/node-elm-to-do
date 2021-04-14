@@ -56,10 +56,10 @@ exports.update_task = (request, response) => {
 
 //  Resolve deleting a task
 exports.delete_task = (request, response) => {
-  Task.remove({ id: request.params.taskId }, (error, task) => {
+  Task.remove({ _id: request.params.taskId }, (error, task) => {
     if (error) {
       response.send(error);
     }
-    response.json({ message: `Task ${task.name} successfully deleted` });
+    response.json({ message: `Task ${request.params.taskId} successfully deleted`, task });
   });
 };
