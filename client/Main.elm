@@ -32,20 +32,23 @@ type Msg
     | DeleteTask Int
 
 
-init : Model
+init : ( Model, Cmd Msg )
 init =
-    { tasks = []
-    , currentId = 1
-    , newTaskName = Nothing
-    }
+    ( { tasks = defaultTasks
+      , currentId = List.length defaultTasks
+      , newTaskName = Nothing
+      }
+    , Cmd.none
+    )
 
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = { init | tasks = defaultTasks }
+    Browser.element
+        { init = \_ -> init
         , update = update
         , view = view
+        , subscriptions = always Sub.none
         }
 
 
@@ -64,17 +67,19 @@ defaultTasks =
     ]
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         UpdateTask id status ->
-            model
+            ( model, Cmd.none )
 
         DeleteTask id ->
-            { model
+            ( { model
                 | tasks =
                     List.filter (\task -> task.id /= id) model.tasks
-            }
+              }
+            , Cmd.none
+            )
 
 
 viewTaskCard : Task -> Html Msg
