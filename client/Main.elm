@@ -70,13 +70,13 @@ defaultTasks =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateTask id status ->
+        UpdateTask selectedTaskID selectedTaskStatus ->
             ( model, Cmd.none )
 
-        DeleteTask id ->
+        DeleteTask selectedTaskID ->
             ( { model
                 | tasks =
-                    List.filter (\task -> task.id /= id) model.tasks
+                    List.filter (\task -> task.id /= selectedTaskID) model.tasks
               }
             , Cmd.none
             )
@@ -85,8 +85,8 @@ update msg model =
 viewTaskCard : Task -> Html Msg
 viewTaskCard task =
     div [ style "background-color" "lightgrey", style "margin-top" "1rem", style "width" "300px" ]
-        [ button [ onClick (UpdateTask task.id Pending) ] [ text "Edit" ]
-        , button [ onClick (DeleteTask task.id) ] [ text "X" ]
+        [ button [ onClick <| UpdateTask task.id Pending ] [ text "Edit" ]
+        , button [ onClick <| DeleteTask task.id ] [ text "X" ]
         , div
             [ style "padding" "1rem" ]
             [ h2 [] [ text task.name ]
