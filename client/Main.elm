@@ -1,13 +1,15 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, h2, input, p, text)
+import Html exposing (Html, button, div, h2, input, main_, p, text)
 import Html.Attributes exposing (placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 
 
 type alias Model =
-    List Task
+    { tasks : List Task
+    , newTask : Task
+    }
 
 
 type TaskStatus
@@ -31,12 +33,14 @@ type alias SelectedTaskId =
 
 type Msg
     = UpdateTask Task
+    | UpdateNewTask Task
+    | CreateNewTask Task
     | DeleteTask SelectedTaskId
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( defaultTasks
+    ( { tasks = defaultTasks, newTask = defaultNewTask }
     , Cmd.none
     )
 
@@ -51,14 +55,23 @@ main =
         }
 
 
+defaultNewTask : Task
+defaultNewTask =
+    { id = List.length defaultTasks
+    , name = ""
+    , description = ""
+    , status = Pending
+    }
+
+
 defaultTasks : List Task
 defaultTasks =
-    [ { id = 1
+    [ { id = 0
       , name = "Buy coffee"
       , description = "Buy coffee on monday"
       , status = Pending
       }
-    , { id = 2
+    , { id = 1
       , name = "Learn elm"
       , description = "Keep building this"
       , status = Pending
@@ -80,22 +93,36 @@ update msg model =
                             else
                                 task
                         )
-                        model
+                        model.tasks
             in
-            ( updatedTasks, Cmd.none )
+            ( { model | tasks = updatedTasks }, Cmd.none )
+
+        UpdateNewTask task ->
+            ( { model | newTask = task }, Cmd.none )
+
+        CreateNewTask task ->
+            ( { model | tasks = model.tasks ++ [ task ], newTask = defaultNewTask }, Cmd.none )
 
         DeleteTask selectedTaskID ->
-            ( List.filter (\task -> task.id /= selectedTaskID) model
+            ( { model | tasks = List.filter (\task -> task.id /= selectedTaskID) model.tasks }
             , Cmd.none
             )
 
 
 view : Model -> Html Msg
-view model =
+view { tasks, newTask } =
     div []
-        [ input [ placeholder "Enter new task" ] []
+        [ div [ style "display" "flex", style "flex-direction" "column", style "align-items" "flex-start" ]
+            [ input [ placeholder "New task name", onInput (\newName -> UpdateNewTask { newTask | name = newName }), value newTask.name ] []
+            , input [ placeholder "New task description", onInput (\newDescription -> UpdateNewTask { newTask | description = newDescription }), value newTask.description ] []
+            , if newTask.name /= "" && newTask.description /= "" then
+                button [ onClick (CreateNewTask newTask) ] [ text "Create" ]
+
+              else
+                button [] [ text "Create" ]
+            ]
         , div [ style "display" "flex", style "flex-direction" "column", style "align-items" "flex-start" ]
-            (List.map viewTaskCard model)
+            (List.map viewTaskCard tasks)
         ]
 
 
