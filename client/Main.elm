@@ -7,9 +7,7 @@ import Html.Events exposing (onClick, onInput)
 
 
 type alias Model =
-    { tasks : List Task
-    , newTaskName : Maybe String
-    }
+    List Task
 
 
 type TaskStatus
@@ -38,9 +36,7 @@ type Msg
 
 init : ( Model, Cmd Msg )
 init =
-    ( { tasks = defaultTasks
-      , newTaskName = Nothing
-      }
+    ( defaultTasks
     , Cmd.none
     )
 
@@ -84,15 +80,12 @@ update msg model =
                             else
                                 task
                         )
-                        model.tasks
+                        model
             in
-            ( { model | tasks = updatedTasks }, Cmd.none )
+            ( updatedTasks, Cmd.none )
 
         DeleteTask selectedTaskID ->
-            ( { model
-                | tasks =
-                    List.filter (\task -> task.id /= selectedTaskID) model.tasks
-              }
+            ( List.filter (\task -> task.id /= selectedTaskID) model
             , Cmd.none
             )
 
@@ -102,7 +95,7 @@ view model =
     div []
         [ input [ placeholder "Enter new task" ] []
         , div [ style "display" "flex", style "flex-direction" "column", style "align-items" "flex-start" ]
-            (List.map viewTaskCard model.tasks)
+            (List.map viewTaskCard model)
         ]
 
 
