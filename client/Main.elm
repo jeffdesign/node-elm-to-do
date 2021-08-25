@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, h2, input, main_, p, text)
+import Html exposing (Html, button, div, h2, input, p, text)
 import Html.Attributes exposing (placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 
@@ -116,7 +116,7 @@ view { tasks, newTask } =
             [ input [ placeholder "New task name", onInput (\newName -> UpdateNewTask { newTask | name = newName }), value newTask.name ] []
             , input [ placeholder "New task description", onInput (\newDescription -> UpdateNewTask { newTask | description = newDescription }), value newTask.description ] []
             , if newTask.name /= "" && newTask.description /= "" then
-                button [ onClick (CreateNewTask newTask) ] [ text "Create" ]
+                button [ onClick (CreateNewTask { newTask | id = List.length tasks }) ] [ text "Create" ]
 
               else
                 button [] [ text "Create" ]
