@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Html, button, div, h2, input, p, text)
-import Html.Attributes exposing (placeholder, style, value)
+import Html.Attributes exposing (disabled, placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -119,7 +119,7 @@ view { tasks, newTask } =
                 button [ onClick (CreateNewTask { newTask | id = List.length tasks }) ] [ text "Create" ]
 
               else
-                button [] [ text "Create" ]
+                button [ disabled True ] [ text "Create" ]
             ]
         , div [ style "display" "flex", style "flex-direction" "column", style "align-items" "flex-start" ]
             (List.map viewTaskCard tasks)
@@ -137,6 +137,9 @@ viewTaskCard task =
 
         editButton =
             button [ onClick <| UpdateTask { task | status = Editing } ] [ text "Edit" ]
+
+        disabledEditButton =
+            button [ disabled True ] [ text "Edit" ]
 
         stopButton =
             button [ onClick <| UpdateTask { task | status = Pending } ] [ text "Stop" ]
@@ -165,7 +168,8 @@ viewTaskCard task =
 
         Completed ->
             completedWrapper
-                [ uncompleteButton
+                [ disabledEditButton
+                , uncompleteButton
                 , deleteButton
                 , div
                     [ style "padding" "1rem" ]
