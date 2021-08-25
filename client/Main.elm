@@ -113,8 +113,18 @@ view : Model -> Html Msg
 view { tasks, newTask } =
     div []
         [ div [ style "display" "flex", style "flex-direction" "column", style "align-items" "flex-start" ]
-            [ input [ placeholder "New task name", onInput (\newName -> UpdateNewTask { newTask | name = newName }), value newTask.name ] []
-            , input [ placeholder "New task description", onInput (\newDescription -> UpdateNewTask { newTask | description = newDescription }), value newTask.description ] []
+            [ input
+                [ placeholder "New task name"
+                , onInput (\newName -> UpdateNewTask { newTask | name = newName })
+                , value newTask.name
+                ]
+                []
+            , input
+                [ placeholder "New task description"
+                , onInput (\newDescription -> UpdateNewTask { newTask | description = newDescription })
+                , value newTask.description
+                ]
+                []
             , if newTask.name /= "" && newTask.description /= "" then
                 button [ onClick (CreateNewTask { newTask | id = List.length tasks }) ] [ text "Create" ]
 
@@ -193,9 +203,19 @@ viewTaskCard task =
 
 viewTaskNameInput : Task -> Html Msg
 viewTaskNameInput task =
-    input [ placeholder "Enter name", value task.name, onInput (\newValue -> UpdateTask { task | name = newValue }) ] []
+    input
+        [ placeholder "Enter name"
+        , value task.name
+        , onInput (\newName -> UpdateTask { task | name = newName })
+        ]
+        []
 
 
 viewTaskDescriptionInput : Task -> Html Msg
 viewTaskDescriptionInput task =
-    input [ placeholder "Enter description", value task.description, onInput (\newValue -> UpdateTask { task | description = newValue }) ] []
+    input
+        [ placeholder "Enter description"
+        , value task.description
+        , onInput (\newDescription -> UpdateTask { task | description = newDescription })
+        ]
+        []
