@@ -89,21 +89,21 @@ defaultTasks =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateTaskName selectedTaskId newTaskName ->
+        UpdateTaskName selectedId newName ->
             let
                 updatedTask task =
-                    if task.id == selectedTaskId then
-                        { task | name = newTaskName }
+                    if task.id == selectedId then
+                        { task | name = newName }
 
                     else
                         task
             in
             ( { model | tasks = List.map updatedTask model.tasks }, Cmd.none )
 
-        UpdateTaskDescription selectedTaskId newDescription ->
+        UpdateTaskDescription selectedId newDescription ->
             let
                 updatedTask task =
-                    if task.id == selectedTaskId then
+                    if task.id == selectedId then
                         { task | description = newDescription }
 
                     else
@@ -111,11 +111,11 @@ update msg model =
             in
             ( { model | tasks = List.map updatedTask model.tasks }, Cmd.none )
 
-        UpdateTaskStatus selectedTaskId newTaskStatus ->
+        UpdateTaskStatus selectedId newStatus ->
             let
                 updatedTask task =
-                    if task.id == selectedTaskId then
-                        { task | status = newTaskStatus }
+                    if task.id == selectedId then
+                        { task | status = newStatus }
 
                     else
                         task
@@ -151,8 +151,8 @@ update msg model =
             , Cmd.none
             )
 
-        DeleteTask selectedTaskId ->
-            ( { model | tasks = List.filter (\task -> task.id /= selectedTaskId) model.tasks }
+        DeleteTask selectedId ->
+            ( { model | tasks = List.filter (\task -> task.id /= selectedId) model.tasks }
             , Cmd.none
             )
 
