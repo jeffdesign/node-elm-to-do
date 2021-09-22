@@ -38,7 +38,6 @@ exports.create_task = (request, response) => {
   });
 };
 
-
 //  Resolve updating a specific task
 exports.update_task = (request, response) => {
   Task.findOneAndUpdate(
@@ -60,6 +59,9 @@ exports.delete_task = (request, response) => {
     if (error) {
       response.send(error);
     }
-    response.json({ message: `Task ${request.params.taskId} successfully deleted`, task });
+    response.json({
+      message: `Task ${request.params.taskId} successfully deleted`,
+      task,
+    });
   });
 };

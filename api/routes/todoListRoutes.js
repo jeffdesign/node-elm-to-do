@@ -11,6 +11,4 @@ module.exports = function (app) {
     .get(todoList.get_task)
     .put(todoList.update_task)
     .delete(todoList.delete_task);
-
-
 };

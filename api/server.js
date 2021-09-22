@@ -2,10 +2,10 @@ const express = require("express"),
   app = express();
 (port = process.env.PORT || 3337),
   (mongoose = require("mongoose")),
-  (Task = require("./api/models/todoListModel"));
+  (Task = require("./models/todoListModel"));
 bodyParser = require("body-parser");
 
-const routes = require("./api/routes/todoListRoutes");
+const routes = require("./routes/todoListRoutes");
 
 //  mongoose instance connection url connection
 mongoose.Promise = global.Promise;
