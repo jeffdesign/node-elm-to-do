@@ -1,7 +1,7 @@
 {
   "name": "nodeelmtodo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple to-do application",
   "main": "index.js",
   "scripts": {
     "start": "yarn dev & yarn server",
@@ -10,7 +10,7 @@
     "server:mongo": "mongod --dbpath ~/data/db",
     "server:start": "nodemon server.js"
   },
-  "author": "",
+  "author": "jeffdesign",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
