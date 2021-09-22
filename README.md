@@ -6,8 +6,6 @@ Simple to-do application written in Node and Elm.
 Backend
 ```bash
 ### dependencies
-> brew install nodemon
-> brew install mongoose
 > brew install mongodb-community
 > yarn install
 ### start sever

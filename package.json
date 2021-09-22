@@ -4,19 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run server & npm run dev",
-    "server": "nodemon server.js",
-    "dev": "node './node_modules/elm-live/bin/elm-live.js' client/Main.elm --port=3338 --open"
+    "start": "yarn dev & yarn server",
+    "dev": "node './node_modules/elm-live/bin/elm-live.js' client/Main.elm --port=3338 --open",
+    "server": "run-p server:mongo server:server",
+    "server:mongo": "mongod --dbpath ~/data/db",
+    "server:server": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "mongodb": "^4.1.2",
     "mongoose": "^5.11.19",
     "nodemon": "^2.0.7"
   },
   "devDependencies": {
     "elm": "^0.19.1-5",
-    "elm-live": "^4.0.2"
+    "elm-live": "^4.0.2",
+    "npm-run-all": "^4.1.5"
   }
 }
