@@ -20,22 +20,29 @@ type TaskStatus
 
 
 type alias Task =
-    { id : SelectedTaskId
+    { id : UUID
     , name : String
     , description : String
     , status : TaskStatus
     }
 
 
-type alias SelectedTaskId =
+type alias NewValue =
+    String
+
+
+type alias UUID =
     Int
 
 
 type Msg
-    = UpdateTask Task
-    | UpdateNewTask Task
-    | CreateNewTask Task
-    | DeleteTask SelectedTaskId
+    = UpdateTaskName UUID NewValue
+    | UpdateTaskDescription UUID NewValue
+    | UpdateTaskStatus UUID TaskStatus
+    | UpdateNewTaskName NewValue
+    | UpdateNewTaskDescription NewValue
+    | CreateNewTask
+    | DeleteTask UUID
 
 
 init : ( Model, Cmd Msg )
@@ -82,29 +89,70 @@ defaultTasks =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateTask selectedTask ->
+        UpdateTaskName selectedTaskId newTaskName ->
             let
-                updatedTasks =
-                    List.map
-                        (\task ->
-                            if task.id == selectedTask.id then
-                                selectedTask
+                updatedTask task =
+                    if task.id == selectedTaskId then
+                        { task | name = newTaskName }
 
-                            else
-                                task
-                        )
-                        model.tasks
+                    else
+                        task
             in
-            ( { model | tasks = updatedTasks }, Cmd.none )
+            ( { model | tasks = List.map updatedTask model.tasks }, Cmd.none )
 
-        UpdateNewTask task ->
-            ( { model | newTask = task }, Cmd.none )
+        UpdateTaskDescription selectedTaskId newDescription ->
+            let
+                updatedTask task =
+                    if task.id == selectedTaskId then
+                        { task | description = newDescription }
 
-        CreateNewTask task ->
-            ( { model | tasks = model.tasks ++ [ task ], newTask = defaultNewTask }, Cmd.none )
+                    else
+                        task
+            in
+            ( { model | tasks = List.map updatedTask model.tasks }, Cmd.none )
 
-        DeleteTask selectedTaskID ->
-            ( { model | tasks = List.filter (\task -> task.id /= selectedTaskID) model.tasks }
+        UpdateTaskStatus selectedTaskId newTaskStatus ->
+            let
+                updatedTask task =
+                    if task.id == selectedTaskId then
+                        { task | status = newTaskStatus }
+
+                    else
+                        task
+            in
+            ( { model | tasks = List.map updatedTask model.tasks }, Cmd.none )
+
+        UpdateNewTaskName newName ->
+            let
+                newTask =
+                    model.newTask
+            in
+            ( { model | newTask = { newTask | name = newName } }, Cmd.none )
+
+        UpdateNewTaskDescription newDescription ->
+            let
+                newTask =
+                    model.newTask
+            in
+            ( { model | newTask = { newTask | description = newDescription } }, Cmd.none )
+
+        CreateNewTask ->
+            ( { model
+                | tasks =
+                    model.tasks
+                        ++ [ { id = List.length model.tasks
+                             , name = model.newTask.name
+                             , description = model.newTask.description
+                             , status = Pending
+                             }
+                           ]
+                , newTask = defaultNewTask
+              }
+            , Cmd.none
+            )
+
+        DeleteTask selectedTaskId ->
+            ( { model | tasks = List.filter (\task -> task.id /= selectedTaskId) model.tasks }
             , Cmd.none
             )
 
@@ -115,18 +163,18 @@ view { tasks, newTask } =
         [ div [ style "display" "flex", style "flex-direction" "column", style "align-items" "flex-start" ]
             [ input
                 [ placeholder "New task name"
-                , onInput (\newName -> UpdateNewTask { newTask | name = newName })
+                , onInput (\newName -> UpdateNewTaskName newName)
                 , value newTask.name
                 ]
                 []
             , input
                 [ placeholder "New task description"
-                , onInput (\newDescription -> UpdateNewTask { newTask | description = newDescription })
+                , onInput (\newDescription -> UpdateNewTaskDescription newDescription)
                 , value newTask.description
                 ]
                 []
             , if newTask.name /= "" && newTask.description /= "" then
-                button [ onClick (CreateNewTask { newTask | id = List.length tasks }) ] [ text "Create" ]
+                button [ onClick CreateNewTask ] [ text "Create" ]
 
               else
                 button [ disabled True ] [ text "Create" ]
@@ -146,19 +194,19 @@ viewTaskCard task =
             div [ style "background-color" "green", style "margin-top" "1rem", style "width" "300px" ] children
 
         editButton =
-            button [ onClick <| UpdateTask { task | status = Editing } ] [ text "Edit" ]
+            button [ onClick <| UpdateTaskStatus task.id Editing ] [ text "Edit" ]
 
         disabledEditButton =
             button [ disabled True ] [ text "Edit" ]
 
         stopButton =
-            button [ onClick <| UpdateTask { task | status = Pending } ] [ text "Stop" ]
+            button [ onClick <| UpdateTaskStatus task.id Pending ] [ text "Stop" ]
 
         completeButton =
-            button [ onClick <| UpdateTask { task | status = Completed } ] [ text "Complete" ]
+            button [ onClick <| UpdateTaskStatus task.id Completed ] [ text "Complete" ]
 
         uncompleteButton =
-            button [ onClick <| UpdateTask { task | status = Pending } ] [ text "Uncomplete" ]
+            button [ onClick <| UpdateTaskStatus task.id Pending ] [ text "Uncomplete" ]
 
         deleteButton =
             button [ onClick <| DeleteTask task.id ] [ text "Delete" ]
@@ -206,7 +254,7 @@ viewTaskNameInput task =
     input
         [ placeholder "Enter name"
         , value task.name
-        , onInput (\newName -> UpdateTask { task | name = newName })
+        , onInput (\newName -> UpdateTaskName task.id newName)
         ]
         []
 
@@ -216,6 +264,6 @@ viewTaskDescriptionInput task =
     input
         [ placeholder "Enter description"
         , value task.description
-        , onInput (\newDescription -> UpdateTask { task | description = newDescription })
+        , onInput (\newDescription -> UpdateTaskDescription task.id newDescription)
         ]
         []
