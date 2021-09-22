@@ -5,15 +5,23 @@ Simple to-do application written in Node and Elm.
 ## Installation
 Backend
 ```bash
-### dependencies
+# 1. install dependencies
 > brew install mongodb-community
-> yarn install
-### start sever
+# 2. start server
 > yarn server
 ```
 
 Frontend
 ```bash
+# 1. install dependencies
+> yarn install
+# 2. start client server
+yarn dev
+```
+
+Frontend + Backend
+```bash
+# 1. start both client and server
 yarn start
 ```
 
