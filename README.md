@@ -17,7 +17,9 @@ Frontend
 yarn start
 ```
 
-
+## Todo
+- [ ] Implement Elm Http.request
+- [ ] Convert server .js to .ts
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
