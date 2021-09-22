@@ -6,9 +6,9 @@
   "scripts": {
     "start": "yarn dev & yarn server",
     "dev": "node './node_modules/elm-live/bin/elm-live.js' client/Main.elm --port=3338 --open",
-    "server": "run-p server:mongo server:server",
+    "server": "run-p server:mongo server:start",
     "server:mongo": "mongod --dbpath ~/data/db",
-    "server:server": "nodemon server.js"
+    "server:start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
